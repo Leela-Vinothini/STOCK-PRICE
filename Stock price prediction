@@ -1,0 +1,49 @@
+import yfinance as yf
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import
+train_test_split
+from sklearn.linear_model import 
+LinearRegression
+from sklearn.metrics import mean_squared_error
+# Download stock data for Google (GOOGL)
+stock_symbol = 'GOOGL'
+stock_data = yf.download(stock_symbol,
+start='2010-01-01', end='2021-12-31')
+print(stock_data.head())
+# Plotting the stock's closing price
+plt.figure(figsize=(10, 6))
+plt.plot(stock_data['Close'], label=f'{stock_symbol}
+Closing Price')
+plt.title(f'{stock_symbol} Stock Price (2010-2021)')
+plt.xlabel('Date')
+plt.ylabel('Closing Price (USD)')
+plt.legend()
+plt.show()
+# Preprocessing data: Convert date to timestamp
+for linear regression
+stock_data['Date'] =
+stock_data.index.map(pd.Timestamp.timestamp)
+X = stock_data[['Date']]
+y = stock_data['Close']
+# Split data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X,
+y, test_size=0.2, random_state=42)
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+# Make predictions
+y_pred = model.predict(X_test)
+# Plot actual vs predicted prices
+plt.figure(figsize=(10, 6))
+plt.plot(y_test.index, y_test, label='Actual Prices')
+plt.plot(y_test.index, y_pred, label='Predicted
+Prices', linestyle='--')
+plt.title(f"{stock_symbol} Stock Price Prediction")
+plt.xlabel("Date")
+plt.ylabel("Price (USD)")
+plt.legend()
+plt.show()
+# Evaluate the model performance
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse}")
